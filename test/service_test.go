@@ -6,10 +6,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/go-kit/kit/log"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/hathbanger/microsvc-base/pkg/microsvc"
+	fakes "github.com/hathbanger/microsvc-base/test/microsvcfakes"
 )
 
 var _ = Describe("Service", func() {
@@ -44,5 +46,7 @@ var _ = Describe("Service", func() {
 				Expect(recorder.Code).To(Equal(400))
 			})
 		})
-	})
+	}) // end of /api/v1/foo
+	//
+	// replace me
 })

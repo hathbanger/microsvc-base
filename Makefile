@@ -28,6 +28,9 @@ SERVICE_DIR := /opt/atu/$(PROJECT_NAME)
 RELEASE_DIR := /go/src/github.com/hathbanger/$(PROJECT_NAME)/build/release
 RELEASE_NAME := $(PROJECT_NAME)
 
+FILE=templates/test.txt
+VARIABLE=`cat $(FILE)`
+
 USER := $(shell id -u)
 
 all: usage
@@ -96,24 +99,22 @@ install:
 
 # endpoint - creates endpoint
 endpoint: templates
-	@echo "[INFO] - parsing flags: ENDPOINT => $(ENDPOINT)"
-	@echo "[INFO] - editing for uppercase"
-	grep -rl Bar templates | xargs sed -i.bak "s/Bar/$(ENDPOINT)/g"
-	@echo "[INFO] - editing for lowercase"
-	@grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
-	@echo "[INFO] - adding to instrumenting.go"
-	@cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
-	@echo "[INFO] - creating special service file and adding package name: $(ENDPOINT2)"
-	@echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
-	@echo "[INFO] - adding to service file: $(ENDPOINT2).go"
-	@cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
-	@echo "[INFO] - adding decodeRequest to transport.go"
-	@cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
-	@echo "[INFO] - adding endpoints to endpoints.go"
-	@cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
-	@echo "[INFO] - adding model"
-	@cp templates/models/$(ENDPOINT2).txt  pkg/$(PACKAGE_NAME)/models/$(ENDPOINT2).go
-
+	# @echo "[INFO] - parsing flags: ENDPOINT => $(ENDPOINT)"
+	# @echo "[INFO] - editing for uppercase"
+	# grep -rl Bar templates | xargs sed -i.bak "s/Bar/$(ENDPOINT)/g"
+	# @echo "[INFO] - editing for lowercase"
+	# @grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
+	# @echo "[INFO] - adding to instrumenting.go"
+	# @cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
+	# @echo "[INFO] - creating special service file and adding package name: $(ENDPOINT2)"
+	# @echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	# @echo "[INFO] - adding to service file: $(ENDPOINT2).go"
+	# @cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	# @cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
+	# @cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
+	# @cp templates/models/$(ENDPOINT2).txt  pkg/$(PACKAGE_NAME)/models/$(ENDPOINT2).go
+	@cat templates/tests.txt
+	echo $(VARIABLE)
 	make templates
 
 
