@@ -1,9 +1,9 @@
 
-func decodeTestTimeRequest(
+func decodeBarRequest(
 	_ context.Context,
 	r *http.Request,
 ) (interface{}, error) {
-	var Request models.TestTimeRequest
+	var Request models.BarRequest
 	if err := json.NewDecoder(r.Body).Decode(&Request); err != nil {
 		return nil, ErrBadRouting
 	}

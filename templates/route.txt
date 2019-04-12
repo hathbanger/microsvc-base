@@ -1,7 +1,7 @@
 // routes - start
  := kithttp.NewServer(
-  MakeTestTimeEndpoint(s, logger, mw),
-  decodeTestTimeRequest,
+  MakeBarEndpoint(s, logger, mw),
+  decodeBarRequest,
   encodeResponse,
   options...,
 )

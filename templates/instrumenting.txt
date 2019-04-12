@@ -1,22 +1,22 @@
 
-// TestTime - intrumentation for foo endpoint
-func (i instrumentingMiddleware) TestTime (
+// Bar - intrumentation for foo endpoint
+func (i instrumentingMiddleware) Bar (
 	ctx context.Context,
-	request models.TestTimeRequest,
-) (res models.TestTimeResponse, err error) {
+	request models.BarRequest,
+) (res models.BarResponse, err error) {
 	defer func(begin time.Time) {
 		i.duration.With(
-			"method", "TestTime",
+			"method", "Bar",
 			"result", fmt.Sprint(err == nil),
 			"mtype", "rate",
 			"unit", "s",
 		).Observe(time.Since(begin).Seconds())
 		i.count.With(
-			"method", "TestTime",
+			"method", "Bar",
 			"result", fmt.Sprint(err == nil),
 			"mtype", "count",
 			"unit", "req",
 		).Add(1)
 	}(time.Now())
-	return i.next.TestTime(ctx, request)
+	return i.next.Bar(ctx, request)
 }
