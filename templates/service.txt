@@ -1,3 +1,14 @@
+import (
+	"context"
+	"errors"
+	"sync"
+
+	"github.com/go-kit/kit/log"
+	"github.com/hashicorp/consul/api"
+
+	"github.com/hathbanger/microsvc-base/pkg/microsvc/models"
+)
+
 // Bar - service for bar
 func (s service) Bar(
 	ctx context.Context,

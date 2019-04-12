@@ -1,3 +1,4 @@
+PACKAGE_NAME := microsvc
 PROJECT_NAME := microsvc-base
 PROJECT_DIR := ~/go/src/github.com/hathbanger/$(PROJECT_NAME)
 
@@ -99,7 +100,13 @@ endpoint: templates
 	@echo "[INFO] - editing for uppercase"
 	grep -rl Bar templates | xargs sed -i.bak "s/Bar/$(ENDPOINT)/g"
 	@echo "[INFO] - editing for lowercase"
-	grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
+	@grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
+	@echo "[INFO] - adding to instrumenting.go"
+	@cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
+	@cat "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	@cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	@cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	make templates
 
 
 ## templates - fetches templates
