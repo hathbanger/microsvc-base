@@ -53,15 +53,15 @@ func (a *authorizor) ValidateAuth() endpoint.Middleware {
 				return nil, errors.New("Invalid token")
 			}
 
-			logger.Log("UserLogin", claims.Username)
+			logger.Log("userlogin", claims.Username)
 
 			if claims.ExpiresAt == 0 {
-				logger.Log("err", "Token has expired")
+				logger.Log("err", "token has expired")
 				return nil, errors.New("Token has expired")
 			}
 
 			if claims.Username == "" {
-				logger.Log("err", "Username is invalid")
+				logger.Log("err", "username is invalid")
 				return nil, errors.New("Username invalid")
 			}
 

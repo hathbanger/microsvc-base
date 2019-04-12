@@ -9,7 +9,6 @@
 ```
 GO111MODULE=on
 ```
-
 **Fetch repo**
 ```
 $ go get github.com/hathbanger/microsvc-base

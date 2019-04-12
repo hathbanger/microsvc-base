@@ -1,0 +1,14 @@
+version: '3'
+services:
+  microsvc-base:
+    build:
+      context: ../../
+      dockerfile: ./deployments/local/Dockerfile
+    container_name: microsvc-base
+    environment:
+      - PORT:$PORT
+    ports:
+      - $PORT:$PORT
+    restart: always
+    volumes:
+      - ../../:/go/src/github.com/hathbanger/microsvc-base

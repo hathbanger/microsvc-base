@@ -58,6 +58,7 @@ func main() {
 
 	config, err := loadConfig()
 	if err != nil {
+		fmt.Println("error", err)
 		errChannel <- err
 	}
 
@@ -172,8 +173,8 @@ func initializeServer(router *mux.Router, port string) http.Server {
 }
 
 func loadConfig() (*models.Config, error) {
+	fmt.Println("loading")
 	var c *models.Config
-
 	_, err := os.Stat(*fconfig)
 	if err != nil {
 		return nil, err
@@ -186,9 +187,9 @@ func loadConfig() (*models.Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	logger.Log("loading config")
+	logger.Log("loading", "config")
 	logger.Log("addr", *faddress)
-	if len(*faddress) > 0 {
+	if len(*fport) > 0 {
 		c.ServicePort = *fport
 		logger.Log("service_port", c.ServicePort)
 	}

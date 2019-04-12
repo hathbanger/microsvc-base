@@ -32,6 +32,19 @@ type service struct {
 	logger log.Logger
 }
 
+// New - returns new service
+func New(config *models.Config, logger log.Logger) Service {
+	return service{
+		mut:    &sync.Mutex{},
+		config: config,
+		logger: logger,
+	}
+}
+
+func (s service) name() string {
+	return ServiceName
+}
+
 func (s service) Health() bool {
 	return true
 }
@@ -56,17 +69,4 @@ func (s service) Foo(
 	s.logger.Log("response", response.Res)
 
 	return response, err
-}
-
-func (s service) name() string {
-	return ServiceName
-}
-
-// New - returns new service
-func New(config *models.Config, logger log.Logger) Service {
-	return service{
-		mut:    &sync.Mutex{},
-		config: config,
-		logger: logger,
-	}
 }
