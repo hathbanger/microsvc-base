@@ -1,26 +1,26 @@
-// MakeBarEndpoint - returns endpoint to bar function
-func MakeBarEndpoint(
+// MakeTestTimeEndpoint - returns endpoint to  function
+func MakeTestTimeEndpoint(
 	s Service,
 	l log.Logger,
 	mw []endpoint.Middleware,
 ) endpoint.Endpoint {
 
 	var e endpoint.Endpoint
-	e = makeBarEndpoint(s)
+	e = makeTestTimeEndpoint(s)
 	// add middlewares
 	for _, m := range mw {
 		e = m(e)
 	}
-	e = LoggingMiddleware(log.With(l, "method", "bar"))(e)
+	e = LoggingMiddleware(log.With(l, "method", ""))(e)
 	return e
 }
 
-func makeBarEndpoint(s Service) endpoint.Endpoint {
+func makeTestTimeEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(models.BarRequest)
+		req, ok := request.(models.TestTimeRequest)
 		if !ok {
 			return nil, ErrBadRequest
 		}
-		return s.Bar(ctx, req)
+		return s.TestTime(ctx, req)
 	}
 }

@@ -1,10 +1,10 @@
 
-func (s service) Bar(
+func (s service) TestTime(
 	ctx context.Context,
-	req models.BarRequest,
-) (models.BarResponse, error) {
+	req models.TestTimeRequest,
+) (models.TestTimeResponse, error) {
 	var (
-		response models.BarResponse
+		response models.TestTimeResponse
 		err      error
 	)
 
@@ -14,7 +14,7 @@ func (s service) Bar(
 		return response, err
 	}
 
-	product := req.Str + "bar"
+	product := req.Str + ""
 	response.Res = product
 	s.logger.Log("response", response.Res)
 

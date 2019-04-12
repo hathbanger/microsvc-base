@@ -1,11 +1,11 @@
 package models
 
-// BarRequest - request obj for bar
-type BarRequest struct {
+// TestTimeRequest - request obj for 
+type TestTimeRequest struct {
 	Str string `json:"str"`
 }
 
-// BarResponse - response obj for bar
-type BarResponse struct {
+// TestTimeResponse - response obj for 
+type TestTimeResponse struct {
 	Res string `json:"res"`
 }

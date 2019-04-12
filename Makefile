@@ -95,12 +95,21 @@ install:
 
 # endpoint - creates endpoint
 endpoint:
-	rm -rf microsvc-base-temp
+	@echo "[INFO] - pre clean"
+	@rm -rf templates
+	@rm -rf microsvc-base-temp
 	@echo "[INFO] - cloning microsvc-base for svc templates"
-	git clone git@github.com:hathbanger/microsvc-base.git microsvc-base-temp
+	@git clone git@github.com:hathbanger/microsvc-base.git microsvc-base-temp
 	@echo "[INFO] - extracting templates"
-	cp -r microsvc-base-temp/templates .
-	rm -rf microsvc-base-temp
+	@cp -r microsvc-base-temp/templates .
+	@echo "[INFO] - deleting temp microsvc"
+	@rm -rf microsvc-base-temp
+	@echo "[INFO] - parsing flags: ENDPOINT => $(ENDPOINT)"
+	@echo "[INFO] - editing for uppercase"
+	grep -rl Bar templates | xargs sed -i.bak "s/Bar/$(ENDPOINT)/g"
+	@echo "[INFO] - editing for lowercase"
+	grep -rl bar templates | xargs sed -i.bak "s/bar/$(echo "$(ENDPOINT)" | awk '{print tolower($(ENDPOINT))}')/g"
+
 
 
 ## test - tests binary
