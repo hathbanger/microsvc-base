@@ -1,4 +1,4 @@
-// MakeBarEndpoint - returns endpoint to  function
+// MakeBarEndpoint - returns endpoint to bar function
 func MakeBarEndpoint(
 	s Service,
 	l log.Logger,
@@ -11,7 +11,7 @@ func MakeBarEndpoint(
 	for _, m := range mw {
 		e = m(e)
 	}
-	e = LoggingMiddleware(log.With(l, "method", ""))(e)
+	e = LoggingMiddleware(log.With(l, "method", "Bar"))(e)
 	return e
 }
 
