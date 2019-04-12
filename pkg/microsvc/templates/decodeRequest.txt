@@ -1,0 +1,11 @@
+
+func decodeBarRequest(
+	_ context.Context,
+	r *http.Request,
+) (interface{}, error) {
+	var barRequest models.BarRequest
+	if err := json.NewDecoder(r.Body).Decode(&barRequest); err != nil {
+		return nil, ErrBadRouting
+	}
+	return barRequest, nil
+}

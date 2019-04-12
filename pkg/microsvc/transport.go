@@ -53,19 +53,14 @@ func MakeRoutes(
 
 	router := mux.NewRouter().StrictSlash(false)
 
-	api := router.PathPrefix("/api").Subrouter()
-
-	foo := kithttp.NewServer(
-		MakeFooEndpoint(s, logger, mw),
-		decodeFooRequest,
-		encodeResponse,
-		options...,
+	router.Methods(http.MethodGet).Path("/health").Handler(
+		kithttp.NewServer(
+			MakeHealthEndpoint(s),
+			decodeHealthRequest,
+			encodeResponse,
+			options...,
+		),
 	)
-
-	api.Methods(http.MethodPost).Path("/v1/foo").Handler(foo)
-
-	// plug in metrics here:
-	// router.Handle("/metrics", promhttp.Handler())
 
 	router.Methods(http.MethodGet).Path("/health").Handler(
 		kithttp.NewServer(
@@ -76,25 +71,23 @@ func MakeRoutes(
 		),
 	)
 
+	api := router.PathPrefix("/api").Subrouter()
+
+	// routes - start
+	foo := kithttp.NewServer(
+		MakeFooEndpoint(s, logger, mw),
+		decodeFooRequest,
+		encodeResponse,
+		options...,
+	)
+	api.Methods(http.MethodPost).Path("/v1/foo").Handler(foo)
+
+	// routes - finish
+
+	// plug in metrics here:
+	// router.Handle("/metrics", promhttp.Handler())
+
 	return router
-}
-
-func decodeHealthRequest(
-	_ context.Context,
-	_ *http.Request,
-) (interface{}, error) {
-	return models.HealthRequest{}, nil
-}
-
-func decodeFooRequest(
-	_ context.Context,
-	r *http.Request,
-) (interface{}, error) {
-	var fooRequest models.FooRequest
-	if err := json.NewDecoder(r.Body).Decode(&fooRequest); err != nil {
-		return nil, ErrBadRouting
-	}
-	return fooRequest, nil
 }
 
 func encodeResponse(
@@ -142,4 +135,22 @@ func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 		"http_code":   code,
 		"http_status": http.StatusText(code),
 	})
+}
+
+func decodeHealthRequest(
+	_ context.Context,
+	_ *http.Request,
+) (interface{}, error) {
+	return models.HealthRequest{}, nil
+}
+
+func decodeFooRequest(
+	_ context.Context,
+	r *http.Request,
+) (interface{}, error) {
+	var fooRequest models.FooRequest
+	if err := json.NewDecoder(r.Body).Decode(&fooRequest); err != nil {
+		return nil, ErrBadRouting
+	}
+	return fooRequest, nil
 }

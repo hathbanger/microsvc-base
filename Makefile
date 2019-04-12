@@ -65,6 +65,12 @@ bootstrap:
 	@echo "[INFO]: finished bootstrap."
 .PHONY: bootstrap
 
+## cd - clones down and updates the deployment info
+cd:
+	@echo "[INFO]: about to clone son"
+
+.PHONY: cd
+
 ## deps - installs and vendors dependencies
 deps:
 	@echo "[INFO] installing dependencies"
@@ -87,11 +93,19 @@ install:
 	go install -v
 .PHONY: install
 
+# endpoint - creates endpoint
+endpoint:
+	@echo "[INFO] - cloning microsvc-base for svc templates"
+	git clone git@github.com:hathbanger/microsvc-base.git microsvc-base-temp
+	@echo "[INFO] - extracting templates"
+	# mv microsvc-base-temp/pkg/microsvc/templates ../../../
+	# rm -rf microsvc-base-temp
+
+
 ## test - tests binary
 test:
 	go test ./...
 .PHONY: test
-
 
 ## watch - watch the local code for changes and rebuilds the test container
 watch:
