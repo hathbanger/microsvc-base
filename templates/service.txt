@@ -1,4 +1,4 @@
-
+// Bar - service for bar
 func (s service) Bar(
 	ctx context.Context,
 	req models.BarRequest,

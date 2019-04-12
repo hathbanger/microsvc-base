@@ -1,5 +1,5 @@
 
-// Bar - intrumentation for foo endpoint
+// Bar - intrumentation for bar endpoint
 func (i instrumentingMiddleware) Bar (
 	ctx context.Context,
 	request models.BarRequest,
