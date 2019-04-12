@@ -95,11 +95,12 @@ install:
 
 # endpoint - creates endpoint
 endpoint:
+	rm -rf microsvc-base-temp
 	@echo "[INFO] - cloning microsvc-base for svc templates"
 	git clone git@github.com:hathbanger/microsvc-base.git microsvc-base-temp
 	@echo "[INFO] - extracting templates"
-	# mv microsvc-base-temp/pkg/microsvc/templates ../../../
-	# rm -rf microsvc-base-temp
+	cp -r microsvc-base-temp/templates .
+	rm -rf microsvc-base-temp
 
 
 ## test - tests binary
