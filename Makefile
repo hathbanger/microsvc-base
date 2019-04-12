@@ -103,9 +103,13 @@ endpoint: templates
 	@grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
 	@echo "[INFO] - adding to instrumenting.go"
 	@cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
+	@echo "[INFO] - creating special service file and adding package name: $(ENDPOINT2)"
 	@cat "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	@echo "[INFO] - adding to service file: $(ENDPOINT2).go"
 	@cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
-	@cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
+	@echo "[INFO] - adding decodeRequest to transport.go"
+	@cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
+
 	make templates
 
 
