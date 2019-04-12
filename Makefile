@@ -111,6 +111,8 @@ endpoint: templates
 	@cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
 	@echo "[INFO] - adding endpoints to endpoints.go"
 	@cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
+	@echo "[INFO] - adding model"
+	@cp templates/models/$(ENDPOINT2).txt  pkg/$(PACKAGE_NAME)/models/$(ENDPOINT2).go
 
 	make templates
 
