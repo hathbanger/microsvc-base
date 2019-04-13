@@ -29,7 +29,7 @@ RELEASE_DIR := /go/src/github.com/hathbanger/$(PROJECT_NAME)/build/release
 RELEASE_NAME := $(PROJECT_NAME)
 
 FILE=templates/test.txt
-VARIABLE=`cat $(FILE)`
+VARIABLE=`echo $(FILE)`
 
 USER := $(shell id -u)
 
@@ -113,8 +113,10 @@ endpoint: templates
 	# @cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
 	# @cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
 	# @cp templates/models/$(ENDPOINT2).txt  pkg/$(PACKAGE_NAME)/models/$(ENDPOINT2).go
-	@cat templates/tests.txt
-	echo $(VARIABLE)
+	sed -i.bak "s/replace me/$$(cat templates/test.txt)/g" test/service_test.go
+	rm -rf test/fakes
+	go generate ./...
+	mv pkg/$(PACKAGE_NAME)/$(PACKAGE_NAME)fakes test/fakes
 	make templates
 
 

@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/hathbanger/microsvc-base/pkg/microsvc"
-	fakes "github.com/hathbanger/microsvc-base/test/microsvcfakes"
+	fakes "github.com/hathbanger/microsvc-base/test/fakes"
 )
 
 var _ = Describe("Service", func() {
