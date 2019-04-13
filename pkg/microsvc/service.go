@@ -17,14 +17,6 @@ const (
 
 //go:generate gobin -m -run github.com/maxbrunsfeld/counterfeiter/v6 . Service
 
-// Service - interface into service methods
-type Service interface {
-	Health() bool
-	ServiceDiscovery() (*api.Client, *api.AgentServiceRegistration, error)
-
-	Foo(context.Context, models.FooRequest) (models.FooResponse, error)
-}
-
 type service struct {
 	mut    *sync.Mutex
 	config *models.Config
@@ -46,4 +38,12 @@ func (s service) name() string {
 
 func (s service) Health() bool {
 	return true
+}
+
+// Service - interface into service methods
+type Service interface {
+	Health() bool
+	ServiceDiscovery() (*api.Client, *api.AgentServiceRegistration, error)
+
+	Foo(context.Context, models.FooRequest) (models.FooResponse, error)
 }

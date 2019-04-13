@@ -31,6 +31,7 @@ RELEASE_NAME := $(PROJECT_NAME)
 FILE=templates/test.txt
 VARIABLE=`echo $(FILE)`
 
+
 USER := $(shell id -u)
 
 all: usage
@@ -99,26 +100,34 @@ install:
 
 # endpoint - creates endpoint
 endpoint: templates
-	# @echo "[INFO] - parsing flags: ENDPOINT => $(ENDPOINT)"
-	# @echo "[INFO] - editing for uppercase"
-	# grep -rl Bar templates | xargs sed -i.bak "s/Bar/$(ENDPOINT)/g"
-	# @echo "[INFO] - editing for lowercase"
-	# @grep -rl bar templates | xargs sed -i.bak "s/bar/$(ENDPOINT2)/g"
-	# @echo "[INFO] - adding to instrumenting.go"
-	# @cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
-	# @echo "[INFO] - creating special service file and adding package name: $(ENDPOINT2)"
-	# @echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
-	# @echo "[INFO] - adding to service file: $(ENDPOINT2).go"
-	# @cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$(ENDPOINT2).go
-	# @cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
-	# @cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
-	# @cp templates/models/$(ENDPOINT2).txt  pkg/$(PACKAGE_NAME)/models/$(ENDPOINT2).go
-	sed -i.bak "s/replace me/$$(cat templates/test.txt)/g" test/service_test.go
+	# @echo "[INFO] - retrieving json struct converter"
+	go get github.com/ChimeraCoder/gojson/gojson
+	# @echo "[INFO] - grabbing endpointName"
+	@read -p "Enter endpoint uppercase name: " capitalizedEndpoint; \
+	read -p "Enter endpoint lowercase name: " lowercaseEndpoint; \
+	echo $$capitalizedEndpoint $$lowercaseEndpoint; \
+	grep -rl Bar templates | xargs sed -i.bak "s/Bar/$$capitalizedEndpoint/g"; \
+	grep -rl bar templates | xargs sed -i.bak "s/bar/$$lowercaseEndpoint/g"; \
+	REQUEST_MODEL=$$capitalizedEndpoint; REQUEST_MODEL+="Request"; \
+	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
+	echo "[INFO] - injecting function into "; \
+	sed -i.bak "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error)\
+	\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
+	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
+	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
+	cat templates/models/request.json | gojson -name=$$capitalizedEndpoint >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go;
+	cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
+	cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
+	cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
+	# sed -i.bak "s~replace me~wow~g" test/service_test.go
+	@make fakes
+	@make templates
+
+# fakes - creates fakes
+fakes:
 	rm -rf test/fakes
 	go generate ./...
 	mv pkg/$(PACKAGE_NAME)/$(PACKAGE_NAME)fakes test/fakes
-	make templates
-
 
 ## templates - fetches templates
 templates:

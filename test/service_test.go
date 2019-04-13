@@ -48,5 +48,5 @@ var _ = Describe("Service", func() {
 		})
 	}) // end of /api/v1/foo
 	//
-	// replace me
+	// wow
 })

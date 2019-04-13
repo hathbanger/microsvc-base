@@ -3,6 +3,7 @@ module github.com/hathbanger/microsvc-base
 go 1.12
 
 require (
+	github.com/ChimeraCoder/gojson v1.0.0 // indirect
 	github.com/canthefason/go-watcher v0.2.4 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-kit/kit v0.8.0
