@@ -18,16 +18,6 @@ func (s service) Bar(
 		response models.BarResponse
 		err      error
 	)
-
-	if req.Str == "" {
-		err = errors.New("no string was passed")
-		s.logger.Log("err", "bar")
-		return response, err
-	}
-
-	product := req.Str + ""
-	response.Res = product
-	s.logger.Log("response", response.Res)
-
+	
 	return response, err
 }
