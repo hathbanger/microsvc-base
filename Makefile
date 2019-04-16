@@ -111,8 +111,8 @@ endpoint: templates
 	REQUEST_MODEL=$$capitalizedEndpoint; REQUEST_MODEL+="Request"; \
 	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
 	echo "[INFO] - injecting function into "; \
-	sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error)\\n\
-	\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
+	sed -i "" "s/\/\/ here/\n$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error)\
+	\n\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
 	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/models/request.json | gojson -name=$$REQUEST_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
