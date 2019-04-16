@@ -46,4 +46,5 @@ type Service interface {
 	ServiceDiscovery() (*api.Client, *api.AgentServiceRegistration, error)
 
 	Foo(context.Context, models.FooRequest) (models.FooResponse, error)
+	// here
 }

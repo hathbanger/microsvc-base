@@ -111,11 +111,14 @@ endpoint: templates
 	REQUEST_MODEL=$$capitalizedEndpoint; REQUEST_MODEL+="Request"; \
 	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
 	echo "[INFO] - injecting function into "; \
-	sed -i.bak "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error)\
+	sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error)\\n\
 	\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
 	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
-	cat templates/models/request.json | gojson -name=$$capitalizedEndpoint >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go;
+	cat templates/models/request.json | gojson -name=$$REQUEST_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
+	cat templates/models/response.json | gojson -name=$$RESPONSE_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
+	sed -i "" "s/package main//g" pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go;\
+	echo "package models" | cat - pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go > temp && mv temp pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
 	cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
 	cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
 	cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
