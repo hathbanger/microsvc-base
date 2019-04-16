@@ -62,15 +62,6 @@ func MakeRoutes(
 		),
 	)
 
-	router.Methods(http.MethodGet).Path("/health").Handler(
-		kithttp.NewServer(
-			MakeHealthEndpoint(s),
-			decodeHealthRequest,
-			encodeResponse,
-			options...,
-		),
-	)
-
 	api := router.PathPrefix("/api").Subrouter()
 
 	// routes - start
@@ -81,7 +72,6 @@ func MakeRoutes(
 		options...,
 	)
 	api.Methods(http.MethodPost).Path("/v1/foo").Handler(foo)
-
 	// routes - finish
 
 	// plug in metrics here:
