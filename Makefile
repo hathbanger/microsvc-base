@@ -127,7 +127,7 @@ endpoint: templates
 	PATTERN='// transport.txt' ./templater.awk templates/transport.txt pkg/$(PACKAGE_NAME)/transport.go > temp && mv temp pkg/$(PACKAGE_NAME)/transport.go
 	PATTERN='// endpoints.txt' ./templater.awk templates/endpoints.txt pkg/$(PACKAGE_NAME)/endpoints.go > temp && mv temp pkg/$(PACKAGE_NAME)/endpoints.go
 	PATTERN='// instrumenting.txt' ./templater.awk templates/instrumenting.txt pkg/$(PACKAGE_NAME)/instrumenting.go > temp && mv temp pkg/$(PACKAGE_NAME)/instrumenting.go
-	PATTERN='// test.txt' ./templater.awk templates/test.txt test/service_test.go
+	PATTERN='// test.txt' ./templater.awk templates/test.txt test/service_test.go > temp && mv temp test/service_test.go
 	echo "[INFO] - finished creating files"
 	@make fakes
 	@make templates
