@@ -130,6 +130,7 @@ endpoint: templates
 	echo "[INFO] - finished creating files"
 	@make fakes
 	@make templates
+	go fmt ./...
 
 # sedtest - test
 sedtest:
