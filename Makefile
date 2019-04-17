@@ -100,28 +100,29 @@ install:
 
 # endpoint - creates endpoint
 endpoint: templates
-	# @echo "[INFO] - retrieving json struct converter"
+	@echo "[INFO] - retrieving json struct converter"
 	go get github.com/ChimeraCoder/gojson/gojson
-	# @echo "[INFO] - grabbing endpointName"
+	@echo "[INFO] - grabbing endpointName"
 	@read -p "Enter endpoint uppercase name: " capitalizedEndpoint; \
 	read -p "Enter endpoint lowercase name: " lowercaseEndpoint; \
-	echo $$capitalizedEndpoint $$lowercaseEndpoint; \
+	echo "[INFO] - stream editing the templates"; \
 	grep -rl Bar templates | xargs sed -i.bak "s/Bar/$$capitalizedEndpoint/g"; \
 	grep -rl bar templates | xargs sed -i.bak "s/bar/$$lowercaseEndpoint/g"; \
 	REQUEST_MODEL=$$capitalizedEndpoint; REQUEST_MODEL+="Request"; \
 	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
-	echo "[INFO] - injecting function into "; \
-	PATTERN='// interfaceDeclaration.txt' ./templater.awk templates/interfaceDeclaration.txt pkg/$(PACKAGE_NAME)/service.go > temp && mv temp pkg/$(PACKAGE_NAME)/service.go
-	# sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error) \\`echo -e '\n\r'`\1\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
+	echo " - "; \
 	echo "[INFO] - creating service file"; \
 	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
+	echo " - "; \
 	echo "[INFO] - generating request and response structures from provided json"; \
 	cat templates/models/request.json | gojson -name=$$REQUEST_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
 	cat templates/models/response.json | gojson -name=$$RESPONSE_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
 	sed -i "" "s/package main//g" pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go;\
 	echo "package models" | cat - pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go > temp && mv temp pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go
+	echo " - "
 	echo "[INFO] - creating the rest of the files"
+	PATTERN='// interfaceDeclaration.txt' ./templater.awk templates/interfaceDeclaration.txt pkg/$(PACKAGE_NAME)/service.go > temp && mv temp pkg/$(PACKAGE_NAME)/service.go
 	PATTERN='// decodeRequest.txt' ./templater.awk templates/decodeRequest.txt pkg/$(PACKAGE_NAME)/transport.go > temp && mv temp pkg/$(PACKAGE_NAME)/transport.go
 	PATTERN='// transport.txt' ./templater.awk templates/transport.txt pkg/$(PACKAGE_NAME)/transport.go > temp && mv temp pkg/$(PACKAGE_NAME)/transport.go
 	PATTERN='// endpoints.txt' ./templater.awk templates/endpoints.txt pkg/$(PACKAGE_NAME)/endpoints.go > temp && mv temp pkg/$(PACKAGE_NAME)/endpoints.go
@@ -130,7 +131,7 @@ endpoint: templates
 	echo "[INFO] - finished creating files"
 	@make fakes
 	@make templates
-	go fmt ./...
+	@make fmt
 
 # sedtest - test
 sedtest:
