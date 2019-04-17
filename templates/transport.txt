@@ -6,4 +6,5 @@ bar := kithttp.NewServer(
   options...,
 )
 api.Methods(http.MethodPost).Path("/v1/bar").Handler(bar)
-// routes - finish
+
+// transport.txt

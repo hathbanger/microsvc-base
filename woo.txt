@@ -1,27 +1,22 @@
 package microsvc
-
 import (
 	"context"
-
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/hathbanger/microsvc-base/pkg/microsvc/models"
 )
-
 // MakeHealthEndpoint - returns an endpoint for the health function
 func MakeHealthEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		return models.HealthResponse{Health: s.Health()}, nil
 	}
 }
-
 // MakeFooEndpoint - returns endpoint to foo function
 func MakeFooEndpoint(
 	s Service,
 	l log.Logger,
 	mw []endpoint.Middleware,
 ) endpoint.Endpoint {
-
 	var e endpoint.Endpoint
 	e = makeFooEndpoint(s)
 	// add middlewares
@@ -31,7 +26,6 @@ func MakeFooEndpoint(
 	e = LoggingMiddleware(log.With(l, "method", "foo"))(e)
 	return e
 }
-
 func makeFooEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req, ok := request.(models.FooRequest)
@@ -41,5 +35,4 @@ func makeFooEndpoint(s Service) endpoint.Endpoint {
 		return s.Foo(ctx, req)
 	}
 }
-
-// endpoints.txt
+10

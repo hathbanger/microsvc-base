@@ -24,5 +24,3 @@ func makeBarEndpoint(s Service) endpoint.Endpoint {
 		return s.Bar(ctx, req)
 	}
 }
-
-// endpoints.txt

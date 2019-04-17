@@ -65,3 +65,5 @@ func (i instrumentingMiddleware) Foo(
 	}(time.Now())
 	return i.next.Foo(ctx, request)
 }
+
+// instrumenting.txt

@@ -112,18 +112,31 @@ endpoint: templates
 	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
 	echo "[INFO] - injecting function into "; \
 	sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error) \\`echo -e '\n\r'`\1\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
+	echo "[INFO] - creating service file"; \
 	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
+	echo "[INFO] - generating request and response structures from provided json"; \
 	cat templates/models/request.json | gojson -name=$$REQUEST_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
 	cat templates/models/response.json | gojson -name=$$RESPONSE_MODEL >> pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
 	sed -i "" "s/package main//g" pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go;\
-	echo "package models" | cat - pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go > temp && mv temp pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go; \
-	cat templates/instrumenting.txt >> pkg/$(PACKAGE_NAME)/instrumenting.go
-	cat templates/decodeRequest.txt >> pkg/$(PACKAGE_NAME)/transport.go
-	cat templates/endpoints.txt >> pkg/$(PACKAGE_NAME)/endpoints.go
-	# sed -i.bak "s~replace me~wow~g" test/service_test.go
+	echo "package models" | cat - pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go > temp && mv temp pkg/$(PACKAGE_NAME)/models/$$lowercaseEndpoint.go
+	echo "[INFO] - creating the rest of the files"
+	PATTERN='// decodeRequest.txt' ./templater.awk templates/decodeRequest.txt pkg/$(PACKAGE_NAME)/transport.go > temp && mv temp pkg/$(PACKAGE_NAME)/transport.go
+	PATTERN='// transport.txt' ./templater.awk templates/transport.txt pkg/$(PACKAGE_NAME)/transport.go > temp && mv temp pkg/$(PACKAGE_NAME)/transport.go
+	PATTERN='// endpoints.txt' ./templater.awk templates/endpoints.txt pkg/$(PACKAGE_NAME)/endpoints.go > temp && mv temp pkg/$(PACKAGE_NAME)/endpoints.go
+	PATTERN='// instrumenting.txt' ./templater.awk templates/instrumenting.txt pkg/$(PACKAGE_NAME)/instrumenting.go > temp && mv temp pkg/$(PACKAGE_NAME)/instrumenting.go
+	PATTERN='// test.txt' ./templater.awk templates/test.txt test/service_test.go
+	echo "[INFO] - finished creating files"
 	@make fakes
 	@make templates
+
+# sedtest - test
+sedtest:
+	PATTERN='// decodeRequest.txt' ./templater.awk templates/decodeRequest.txt pkg/$(PACKAGE_NAME)/transport.go
+	PATTERN='// transport.txt' ./templater.awk templates/transport.txt pkg/$(PACKAGE_NAME)/transport.go
+	PATTERN='// endpoints.txt' ./templater.awk templates/endpoints.txt pkg/$(PACKAGE_NAME)/endpoints.go
+	PATTERN='// instrumenting.txt' ./templater.awk templates/instrumenting.txt pkg/$(PACKAGE_NAME)/instrumenting.go
+	PATTERN='// test.txt' ./templater.awk templates/test.txt test/service_test.go
 
 # fakes - creates fakes
 fakes:

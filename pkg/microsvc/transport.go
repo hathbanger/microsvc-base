@@ -74,6 +74,8 @@ func MakeRoutes(
 	api.Methods(http.MethodPost).Path("/v1/foo").Handler(foo)
 	// routes - finish
 
+	// transport.txt
+
 	// plug in metrics here:
 	// router.Handle("/metrics", promhttp.Handler())
 
@@ -144,3 +146,5 @@ func decodeFooRequest(
 	}
 	return fooRequest, nil
 }
+
+// decodeRequest.txt

@@ -9,3 +9,5 @@ func decodeBarRequest(
 	}
 	return Request, nil
 }
+
+// decodeRequest.txt
