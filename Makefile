@@ -111,7 +111,8 @@ endpoint: templates
 	REQUEST_MODEL=$$capitalizedEndpoint; REQUEST_MODEL+="Request"; \
 	RESPONSE_MODEL=$$capitalizedEndpoint; RESPONSE_MODEL+="Response"; \
 	echo "[INFO] - injecting function into "; \
-	sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error) \\`echo -e '\n\r'`\1\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
+	PATTERN='// interfaceDeclaration.txt' ./templater.awk templates/interfaceDeclaration.txt pkg/$(PACKAGE_NAME)/service.go > temp && mv temp pkg/$(PACKAGE_NAME)/service.go
+	# sed -i "" "s/\/\/ here/$$capitalizedEndpoint(context.Context, models.$$REQUEST_MODEL) (models.$$RESPONSE_MODEL, error) \\`echo -e '\n\r'`\1\/\/ here /g" pkg/$(PACKAGE_NAME)/service.go; \
 	echo "[INFO] - creating service file"; \
 	echo "package $(PACKAGE_NAME)" >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \
 	cat templates/service.txt >> pkg/$(PACKAGE_NAME)/$$lowercaseEndpoint.go; \

@@ -20,3 +20,5 @@ func (i instrumentingMiddleware) Bar (
 	}(time.Now())
 	return i.next.Bar(ctx, request)
 }
+
+//instrumenting.txt

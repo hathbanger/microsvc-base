@@ -66,4 +66,4 @@ func (i instrumentingMiddleware) Foo(
 	return i.next.Foo(ctx, request)
 }
 
-// instrumenting.txt
+//instrumenting.txt
