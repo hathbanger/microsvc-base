@@ -1,0 +1,3 @@
+Bar(context.Context, models.BarRequest) (models.BarResponse, error)
+
+// interfaceDeclaration.txt
