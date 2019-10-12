@@ -7,25 +7,45 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/auth/jwt"
-	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/hathbanger/microsvc-base/pkg/microsvc/models"
 )
 
+type contextKey string
+
+const (
+	// ContextKeyUser - context key for user
+	ContextKeyUser = contextKey("user")
+	// ContextKeyEmail - context key for email
+	ContextKeyEmail = contextKey("email")
+	// ContextKeyToken - context key for token
+	ContextKeyToken = contextKey("token")
+)
+
 var (
-	// ErrBadRequest - bad request
+	// ErrBadRequest - invalid or malformed request
 	ErrBadRequest = errors.New("bad request")
-	// ErrBadRouting - bad routing
-	ErrBadRouting = errors.New("inconsistent mapping between route and handler")
-	// ErrInvalidArgument - invalid argument
+	// ErrBadRouting - bad routing error
+	ErrBadRouting = errors.New("inconsistent mapping between route and handler (programmer error)")
+	// ErrInvalidArgument - invalid argument error
 	ErrInvalidArgument = errors.New("invalid argument")
+	// ErrForbidden - invalid argument error
+	ErrForbidden = errors.New("you're forbidden to do this")
+	// ErrInvalidToken - invalid argument error
+	ErrInvalidToken = errors.New("token is invalid")
 	// ErrUnauthorized - unauthorized
 	ErrUnauthorized = errors.New("unauthorized")
-	// ErrServiceUnhealthy - service unhealthy
+	// ErrServiceUnhealthy - the service has become unhealthy
 	ErrServiceUnhealthy = errors.New("service unhealthy")
+	// ErrInvalidRequestBody - the request body was invalid and could not be
+	// decoded
+	ErrInvalidRequestBody = errors.New("invalid request body, could not decode")
+	// ErrUnableToParseClaims - the claims could not be parsed
+	ErrUnableToParseClaims = errors.New("unable to parse claims")
 )
 
 // Failure - should be implemented by response types so encoders can check that
@@ -38,7 +58,7 @@ type Failure interface {
 func MakeRoutes(
 	s Service,
 	logger log.Logger,
-	mw []endpoint.Middleware,
+	c *models.Config,
 ) *mux.Router {
 
 	options := []kithttp.ServerOption{
@@ -47,11 +67,13 @@ func MakeRoutes(
 		kithttp.ServerBefore(
 			[]kithttp.RequestFunc{
 				jwt.HTTPToContext(),
+				xRequestIDToContext,
 			}...,
 		),
 	}
-
+	// create the router
 	router := mux.NewRouter().StrictSlash(false)
+	// / and /version handler for version
 
 	router.Methods(http.MethodGet).Path("/health").Handler(
 		kithttp.NewServer(
@@ -66,7 +88,7 @@ func MakeRoutes(
 
 	// routes - start
 	foo := kithttp.NewServer(
-		MakeFooEndpoint(s, logger, mw),
+		MakeFooEndpoint(s, logger, c),
 		decodeFooRequest,
 		encodeResponse,
 		options...,
@@ -127,6 +149,41 @@ func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 		"http_code":   code,
 		"http_status": http.StatusText(code),
 	})
+}
+
+// xRequestIDToConext populates the context with a request id and sets the
+// X-Request-ID http.Header
+func xRequestIDToContext(ctx context.Context, r *http.Request) context.Context {
+	id := uuid.NewV4().String()
+	h := r.Header.Get("X-Request-Id")
+	if len(h) > 0 {
+		id = h
+	} else {
+		if v, ok := ctx.Value(kithttp.ContextKeyRequestXRequestID).(string); ok {
+			id = v
+		}
+	}
+	return context.WithValue(
+		ctx,
+		kithttp.ContextKeyRequestXRequestID,
+		id,
+	)
+}
+
+// version - returns the service version information
+func version(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
+		"arch":        Arch,
+		"api_version": APIVersion,
+		"build_time":  BuildTime,
+		"git_commit":  GitCommit,
+		"name":        Name,
+		"version":     Ver,
+	}); err != nil {
+		return
+	}
 }
 
 func decodeHealthRequest(

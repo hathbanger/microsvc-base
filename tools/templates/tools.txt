@@ -1,0 +1,7 @@
+package tools
+
+import (
+_ "github.com/maxbrunsfeld/counterfeiter/v6"
+)
+
+// this file imports packages that used when runnin go generate.

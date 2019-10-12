@@ -1,8 +1,0 @@
-// routes - start
- := kithttp.NewServer(
-  MakeBarEndpoint(s, logger, mw),
-  decodeBarRequest,
-  encodeResponse,
-  options...,
-)
-api.Methods(http.MethodPost).Path("/v1/bar").Handler()

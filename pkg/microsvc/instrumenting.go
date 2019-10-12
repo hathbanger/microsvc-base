@@ -36,12 +36,12 @@ func (i instrumentingMiddleware) Health() bool {
 }
 
 // ServiceDiscovery - service discovery
-func (i instrumentingMiddleware) ServiceDiscovery() (
+func (i instrumentingMiddleware) ServiceDiscovery(address string, port string) (
 	*api.Client,
 	*api.AgentServiceRegistration,
 	error,
 ) {
-	return i.next.ServiceDiscovery()
+	return i.next.ServiceDiscovery(address, port)
 }
 
 // Foo - intrumentation for foo endpoint
@@ -66,4 +66,4 @@ func (i instrumentingMiddleware) Foo(
 	return i.next.Foo(ctx, request)
 }
 
-//instrumenting.txt
+// instrumenting.txt

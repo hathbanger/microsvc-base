@@ -7,11 +7,11 @@ import (
 	"net/http/httptest"
 
 	"github.com/go-kit/kit/log"
+	fakes "github.com/hathbanger/microsvc-base/test/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/hathbanger/microsvc-base/pkg/microsvc"
-	fakes "github.com/hathbanger/microsvc-base/test/fakes"
 )
 
 var _ = Describe("Service", func() {
@@ -47,6 +47,5 @@ var _ = Describe("Service", func() {
 			})
 		})
 	}) // end of /api/v1/foo
-
-	// test.txt
+	// text.txt
 })

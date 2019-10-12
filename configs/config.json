@@ -1,3 +1,18 @@
 {
-  "service_addr": "http://localhost"
+    "auth": {
+        "token_url": "url",
+        "client_id": "user-xxx",
+        "client_secret": "xxx"
+    },
+    "consul": {
+        "consul_addr": "http://127.0.0.1",
+        "consul_port": "8500",
+        "consul_token": "8156e145-0c9f-ed8e-507f-8d833cd5a768"
+    },
+    "debug": false,
+    "httpClientTimeout": "380s",
+    "httpServerReadTimeout": "380s",
+    "httpServerWriteTimeout": "380s",
+    "service_addr": "127.0.0.1",
+    "service_port": "3000"
 }

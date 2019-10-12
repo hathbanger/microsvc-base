@@ -4,11 +4,14 @@ import "crypto/rsa"
 
 // Config - configuration file structure
 type Config struct {
-	ServiceAddr string         `json:"service_addr"`
-	ServicePort string         `json:"service_port"`
-	PublicKey   *rsa.PublicKey `json:"public_key"`
-	Consul      Consul         `json:"consul"`
-	Auth        Auth           `json:"auth"`
+	ServiceAddr            string         `json:"service_addr"`
+	ServicePort            string         `json:"service_port"`
+	HTTPServerReadTimeout  string         `json:"https_server_read_timeout"`
+	HTTPServerWriteTimeout string         `json:"https_server_write_timeout"`
+	LogPath                string         `json:"log_path,omitempty"`
+	PublicKey              *rsa.PublicKey `json:"public_key"`
+	Consul                 Consul         `json:"consul"`
+	Auth                   Auth           `json:"auth"`
 }
 
 // Consul - holds consul config stuff
