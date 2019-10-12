@@ -1,0 +1,15 @@
+{{$env := env "ENV" -}}
+{
+    "auth" : {
+        "foo": "bar"
+    },
+    "consul": {
+        "boo": "baz"
+    },
+    "debug": false,
+    "httpClientTimeout": "380s",
+    "httpServerReadTimeout": "380s",
+    "httpServerWriteTimeout": "380s",
+    "service_addr": "127.0.0.1",
+    "service_port": "3000" 
+}
