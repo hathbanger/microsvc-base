@@ -150,7 +150,6 @@ endif
 ## bootstrap - bootstraps the cuurent system for development
 bootstrap:
 	@echo "[INFO]: installing prerequisites"
-	Amh05055!
 	@/usr/bin/ruby -e $$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)
 	@brew install gnu-getopt
 	@brew install docker-compose
@@ -224,10 +223,9 @@ endif
 # endpoint - creates endpoint
 endpoint: 
 	go get github.com/ChimeraCoder/gojson/gojson
-	#git clone https://github.com/hathbanger/microsvc-generate
-	cp -r ../microsvc-generate .
-	cd microsvc-generate && make endpoint 
-	rm -rf microsvc-generate
+	git clone https://github.com/hathbanger/microsvc-generator
+	cd microsvc-generator && make endpoint 
+	rm -rf microsvc-generator
 	#@make fakes
 	#@make templates
 	@make fmt
