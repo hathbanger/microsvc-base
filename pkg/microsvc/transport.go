@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/go-kit/kit/auth/jwt"
@@ -85,7 +86,7 @@ func MakeRoutes(
 	)
 
 	api := router.PathPrefix("/api").Subrouter()
-
+	fmt.Println("TEMPORARAY API PRINT", api)
 	// transport.txt
 
 	// plug in metrics here:
