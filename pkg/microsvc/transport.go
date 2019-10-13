@@ -86,16 +86,6 @@ func MakeRoutes(
 
 	api := router.PathPrefix("/api").Subrouter()
 
-	// routes - start
-	foo := kithttp.NewServer(
-		MakeFooEndpoint(s, logger, c),
-		decodeFooRequest,
-		encodeResponse,
-		options...,
-	)
-	api.Methods(http.MethodPost).Path("/v1/foo").Handler(foo)
-	// routes - finish
-
 	// transport.txt
 
 	// plug in metrics here:
@@ -191,17 +181,6 @@ func decodeHealthRequest(
 	_ *http.Request,
 ) (interface{}, error) {
 	return models.HealthRequest{}, nil
-}
-
-func decodeFooRequest(
-	_ context.Context,
-	r *http.Request,
-) (interface{}, error) {
-	var fooRequest models.FooRequest
-	if err := json.NewDecoder(r.Body).Decode(&fooRequest); err != nil {
-		return nil, ErrBadRouting
-	}
-	return fooRequest, nil
 }
 
 // decodeRequest.txt

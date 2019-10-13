@@ -30,7 +30,6 @@ func (s service) ServiceDiscovery(
 	if err != nil {
 		return nil, nil, err
 	}
-	fmt.Println("ADD", address)
 	consulAddress := fmt.Sprintf("%s:%s", u.Hostname(), u.Port())
 	client, err := api.NewClient(&api.Config{
 		Address: consulAddress,

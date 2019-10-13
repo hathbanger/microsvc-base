@@ -1,14 +1,8 @@
 package microsvc
 
 import (
-	"context"
-	"fmt"
-	"time"
-
 	"github.com/go-kit/kit/metrics"
 	"github.com/hashicorp/consul/api"
-
-	"github.com/hathbanger/microsvc-base/pkg/microsvc/models"
 )
 
 // InstrumentingMiddleware - middleware for metrics
@@ -42,28 +36,6 @@ func (i instrumentingMiddleware) ServiceDiscovery(address string, port string) (
 	error,
 ) {
 	return i.next.ServiceDiscovery(address, port)
-}
-
-// Foo - intrumentation for foo endpoint
-func (i instrumentingMiddleware) Foo(
-	ctx context.Context,
-	request models.FooRequest,
-) (res models.FooResponse, err error) {
-	defer func(begin time.Time) {
-		i.duration.With(
-			"method", "Foo",
-			"result", fmt.Sprint(err == nil),
-			"mtype", "rate",
-			"unit", "s",
-		).Observe(time.Since(begin).Seconds())
-		i.count.With(
-			"method", "Foo",
-			"result", fmt.Sprint(err == nil),
-			"mtype", "count",
-			"unit", "req",
-		).Add(1)
-	}(time.Now())
-	return i.next.Foo(ctx, request)
 }
 
 // instrumenting.txt

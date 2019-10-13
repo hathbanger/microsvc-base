@@ -1,7 +1,6 @@
 package microsvc
 
 import (
-	"context"
 	"sync"
 
 	"github.com/go-kit/kit/log"
@@ -72,8 +71,6 @@ func (s service) Health() bool {
 type Service interface {
 	Health() bool
 	ServiceDiscovery(string, string) (*api.Client, *api.AgentServiceRegistration, error)
-
-	Foo(context.Context, models.FooRequest) (models.FooResponse, error)
 
 	// interfaceDeclaration.txt
 }

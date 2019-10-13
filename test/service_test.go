@@ -1,8 +1,6 @@
 package service_test
 
 import (
-	"bytes"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 
@@ -28,24 +26,5 @@ var _ = Describe("Service", func() {
 
 	AfterEach(func() {})
 
-	Describe("POST /api/v1/foo", func() {
-		Context("with an invalid request/json", func() {
-			BeforeEach(func() {
-				payload, _ := json.Marshal(
-					`{"invalid": "json"}`,
-				)
-				request, _ = http.NewRequest(
-					http.MethodPost,
-					"/api/v1/foo",
-					bytes.NewReader(payload),
-				)
-			})
-
-			It("returns http status code 400", func() {
-				server.ServeHTTP(recorder, request)
-				Expect(recorder.Code).To(Equal(400))
-			})
-		})
-	}) // end of /api/v1/foo
-	// text.txt
+	// test.txt
 })
